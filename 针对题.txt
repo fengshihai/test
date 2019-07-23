@@ -1,0 +1,75 @@
+1.用构造函数`function user(name,age,gender){}`声明一个用户对象，对象中含有方法getInfo()返回用户的基本
+
+信息name,age,gender
+
+  并通过闭包模块化的方案对外暴露该对象，在外部可以通过user.getInfo()获取用户的基本信息
+
+	var user = (function () {
+        var name = "lisi";
+        var age = 20;
+        var gender = "男";
+        function getInfo() {
+            console.log(name, age, gender)
+        }
+        return {
+            getInfo,
+        };
+    })();
+    user.getInfo();
+
+
+
+2.通过定义时间模块，对外暴露出如下函数：
+
+  now() //返回当前时间的时间戳
+
+  str2time(unix_time) //返回一个时间格式化的字符串 yy-mm-dd h:i:s的格式
+
+  在外部可以通过time.now()和time.str2time(....)进行调用
+
+
+var data = (function () {
+        function now(time) {
+            const dt = new Date(time)
+            return parseInt(dt.getTime() / 1000)
+        }
+        function str2time(time) {
+            const dt = new Date(time)
+            var unix_time = parseInt(dt.getTime() / 1000)
+            let dateObj = new Date(unix_time * 1000)
+            let Y = dateObj.getFullYear()
+            let m = dateObj.getMonth() + 1 < 10 ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+            let d = dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate()
+            let H = dateObj.getHours() < 10 ? `0${dateObj.getHours()}` : dateObj.getHours()
+            let i = dateObj.getMinutes() < 10 ? `0${dateObj.getMinutes()}` : dateObj.getMinutes()
+            let s = dateObj.getSeconds() < 10 ? `0${dateObj.getSeconds()}` : dateObj.getSeconds()
+            return `${Y}-${m}-${d} ${H}:${i}:${s}`
+        }
+        return {
+            now,
+            str2time
+        };
+    })();
+    data.now(new Date());
+    data.str2time(new Date());
+    console.log("now:", data.now(new Date()))
+    console.log("str2time:", data.str2time(new Date()))	
+
+
+3.使用vuejs框架通过指令渲染之前定义的模块user.getInfo的信息都页面上
+
+4.使用vuejs的声明周期函数created把之前模块的user对象加载到vue的data中，在vuejs中遍历出3个用户的信息(这
+
+3个用户必须是通过user模块的构造函数声明的)
+
+5.在vue中通过之前定义的时间模块中暴露的函数time.now和time.str2time(...)作为vue的过滤器应用并渲染到页面
+
+中
+
+6.把用户模块定义的不同用户分别作为模块，并能通过路由的切换组件查看不同的用户
+
+
+
+
+
+  

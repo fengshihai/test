@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>练习</title>
+</head>
+
+<body>
+    <div id="root">
+        {{name}} {{age}} {{gender}}
+        <ul>
+            <li v-for="user in pros">
+                <p>name:{{user.name}} age:{{user.age}} gender:{{user.gender}} </p>
+                <p>time:{{user.time}}</p>
+                <p>time now:{{user.time | now}}</p>
+                <p>time str2time:{{user.time | str2time}}</p>
+            </li>
+        </ul>
+        <input type="text" v-model="name" />
+        <input type="text" v-model="age" />
+        <input type="text" v-model="gender" />
+        <button @click="add">提交</button>
+        <router-link to="/registered">注册</router-link>
+        <router-link to="/login">登录</router-link>
+        <router-view></router-view>
+    </div>
+</body>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue-router/3.0.7/vue-router.js"></script>
+<script>
+    window.onload = function () {
+        Vue.filter("now", function (time) {
+            const dt = new Date(time)
+            return parseInt(dt.getTime() / 1000)
+        })
+        Vue.filter("str2time", function (time) {
+            const dt = new Date(time)
+            var unix_time = parseInt(dt.getTime() / 1000)
+            let dateObj = new Date(unix_time * 1000)
+            let Y = dateObj.getFullYear()
+            let m = dateObj.getMonth() + 1 < 10 ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+            let d = dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate()
+            let H = dateObj.getHours() < 10 ? `0${dateObj.getHours()}` : dateObj.getHours()
+            let i = dateObj.getMinutes() < 10 ? `0${dateObj.getMinutes()}` : dateObj.getMinutes()
+            let s = dateObj.getSeconds() < 10 ? `0${dateObj.getSeconds()}` : dateObj.getSeconds()
+            return `${Y}-${m}-${d} ${H}:${i}:${s}`
+        })
+        const vmRouter = new VueRouter({
+            routes: [
+                { path: "/registered", component: { template: '<div>注册</div>' } },
+                { path: "/login", component: { template: '<div>登录</div>' } },
+            ]
+        })
+        const vm = new Vue({
+            el: "#root",//要渲染范围
+            router: vmRouter,
+            //要渲染数据
+            data: {
+                name: '',
+                age: '',
+                gender: '',
+                pros: [{}
+                ]
+            },
+            methods: {
+                add() {
+                    let add = { name: this.name, age: this.age, gender: this.gender, time: new Date() }
+                    this.pros.push(add)
+                }
+            },
+            created() {
+                this.name = "lisi"
+                this.age = 12
+                this.gender = "男"
+                this.pros = [{ name: this.name, age: this.age, gender: this.gender, time: new Date() }]
+            }
+        })
+    }
+</script>
+
+</html>
